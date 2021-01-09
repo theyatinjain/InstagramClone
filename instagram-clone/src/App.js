@@ -5,6 +5,7 @@ import { auth, db } from "./firebase";
 import { makeStyles } from "@material-ui/core/styles";
 import Modal from "@material-ui/core/Modal";
 import { Button, Input } from "@material-ui/core";
+import ImageUpload from './ImageUpload';
 
 function getModalStyle() {
   const top = 50;
@@ -54,7 +55,7 @@ function App() {
   }, [user, username]);
 
   useEffect(() => {
-    db.collection("posts").onSnapshot((snapshot) => {
+    db.collection("posts").orderBy('timestamp', 'desc').onSnapshot((snapshot) => {
       setPosts(
         snapshot.docs.map((doc) => ({
           id: doc.id,
@@ -74,7 +75,7 @@ function App() {
         });
       })
       .catch((error) => alert(error.message));
-      setOpen(false);
+    setOpen(false);
   };
 
   const signIn = (event) => {
@@ -82,7 +83,7 @@ function App() {
     auth
       .signInWithEmailAndPassword(email, password)
       .catch((error) => alert(error.message));
-      setOpenSignIn(false);
+    setOpenSignIn(false);
   };
 
   return (
@@ -155,20 +156,33 @@ function App() {
         {user ? (
           <Button onClick={() => auth.signOut()}>Logout</Button>
         ) : (
-          <div className="app__loginContainer">
-            <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
-            <Button onClick={() => setOpen(true)}>Sign Up</Button>
-          </div>
-        )}
+            <div className="app__loginContainer">
+              <Button onClick={() => setOpenSignIn(true)}>Sign In</Button>
+              <Button onClick={() => setOpen(true)}>Sign Up</Button>
+            </div>
+          )}
       </div>
-      {posts.map(({ id, post }) => (
-        <Post
-          key={id}
-          username={post.username}
-          caption={post.caption}
-          imageURL={post.imageURL}
-        />
-      ))}
+
+      <div className="app__posts">
+        <div className="app__posts-left">
+        {posts.map(({ id, post }) => (
+          <Post
+            key={id}
+            postId={id}
+            user={user}
+            username={post.username}
+            caption={post.caption}
+            imageURL={post.imageURL}
+          />
+        ))}
+        </div>
+        <div className="app__posts-right">
+          <Post username="Barked ✅" caption="A cute doggo to cheer you up!!! 😍😍" imageURL="https://images.unsplash.com/photo-1606602059984-a97ea7617e33?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MjZ8fGdvbGRlbiUyMHJldHJpZXZlcnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=60" />
+        </div>
+        </div>
+      {user?.displayName ? (
+        <ImageUpload username={user.displayName} />
+      ) : (<h3>Login to Upload</h3>)}
     </div>
   );
 }

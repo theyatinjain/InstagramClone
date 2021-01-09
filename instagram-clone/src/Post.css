@@ -13,15 +13,44 @@
 
 .post__text {
     font-weight: normal;
-    padding: 15px 10px;
+    padding: 15px 20px;
 }
 
 .post__header {
     display: flex;
     align-items: center;
-    padding: 15px 10px;
+    padding: 15px 20px;
 }
 
 .post__avatar {
     margin-right: 10px;
+}
+
+.post__commentBox {
+    display: flex;
+    margin-top: 10px;
+}
+
+.post__comments {
+    padding: 10px 20px;
+}
+
+.post__input {
+    flex: 0.9;
+    border: none;
+    padding: 10px;
+    border-top: 1px solid #d3d3d3;
+    outline: none;
+}
+
+.post__button {
+    flex: 0.1;
+    border: none;
+    border-top: 1px solid #d3d3d3;
+    color: #6082a3;
+    background-color: transparent;
+}
+
+.post__button:hover {
+    background-color: #d3d3d3;
 }
